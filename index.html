@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EOLR — Roux LSE Tutorial</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-row">
+      <h1>EOLR</h1>
+      <input type="search" id="search" placeholder="Search cases, algs, LR positions…" autocomplete="off">
+      <div class="overall-progress" title="Cases marked as learned">
+        <span id="overall-count">0/0</span>
+        <div class="bar-track"><div class="bar-fill" id="overall-bar"></div></div>
+      </div>
+    </div>
+    <div class="header-row secondary">
+      <nav id="group-nav" class="group-nav"></nav>
+      <div class="filter-chips">
+        <button class="filter-chip active" data-filter="all">All</button>
+        <button class="filter-chip" data-filter="none">Not started</button>
+        <button class="filter-chip" data-filter="learning">Learning</button>
+        <button class="filter-chip" data-filter="learned">Learned</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="intro">
+    <p>
+      <strong>EOLR</strong> orients all six remaining edges (EO) while simultaneously placing the
+      UL and UR edges on the bottom, ready to be solved with <code>M2</code> — the first step of
+      the Roux method's Last Six Edges. Cases are grouped by EO case:
+      <em>x/y</em> means <em>x</em> misoriented edges on U and <em>y</em> on D
+      (<em>o</em> = opposite, <em>a</em> = adjacent). The LR positions each algorithm covers
+      are listed in parentheses; <strong>MC solutions</strong> solve with misoriented centers.
+    </p>
+    <p class="legend">
+      <span class="legend-item"><span class="swatch swatch-silver"></span> U/D color (oriented on top)</span>
+      <span class="legend-item"><span class="swatch swatch-purple"></span> F/B color (misoriented on top)</span>
+      <span class="legend-item"><span class="swatch swatch-yellow"></span><span class="swatch swatch-orange"></span><span class="swatch swatch-red"></span> LR edges (yellow on top = oriented)</span>
+      <span class="legend-item"><span class="swatch swatch-gray"></span> ignored</span>
+    </p>
+  </section>
+
+  <main id="cases"></main>
+  <p id="no-results" hidden>No cases match your search.</p>
+
+  <footer class="site-footer">
+    <p>
+      Content from the <a href="https://docs.google.com/document/d/1dvGERLfN-0rVwN914HH1zRPHLfdM6d5rPfe0HxOMK08/edit" target="_blank" rel="noopener">EOLR doc</a>
+      · Images by <a href="https://visualcube.api.cubing.net/" target="_blank" rel="noopener">VisualCube</a>
+      · Progress is saved in your browser
+    </p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
