@@ -33,6 +33,18 @@ window.addEventListener("hashchange", syncView);
 const SELECTION_KEY = "eolr-trainer-selection";
 const STATS_KEY = "eolr-trainer-stats";
 const WEAK_KEY = "eolr-trainer-weak";
+const COLLAPSED_KEY = "eolr-trainer-collapsed";
+
+function loadCollapsed() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(COLLAPSED_KEY));
+    if (Array.isArray(raw)) return new Set(raw);
+  } catch {}
+  return new Set();
+}
+
+// set of group ids whose accordion is collapsed
+const collapsed = loadCollapsed();
 
 function loadSelection() {
   try {
@@ -109,16 +121,33 @@ function renderSelection() {
         </div>`;
       })
       .join("");
-    return `<section class="trainer-group">
-      <header class="tg-header">
+    const open = collapsed.has(g.id) ? "" : " open";
+    return `<details class="trainer-group" data-group="${g.id}"${open}>
+      <summary class="tg-header">
         <label><input type="checkbox" class="group-check" data-group="${g.id}"><span>${g.id}</span></label>
         <span class="bad-edges">Misoriented edges: ${g.badEdges.join(", ")}</span>
-      </header>
+        <span class="tg-count" data-count-group="${g.id}"></span>
+      </summary>
       ${rows}
-    </section>`;
+    </details>`;
   }).join("");
   updateSelectionUI();
 }
+
+// A <summary> containing an interactive control still toggles the <details>
+// when that control is clicked; stop the group checkbox from collapsing it.
+trainerGroups.addEventListener("click", (e) => {
+  if (e.target.closest(".group-check")) e.preventDefault();
+});
+
+// Persist which groups are collapsed so the accordion survives reloads.
+trainerGroups.addEventListener("toggle", (e) => {
+  const d = e.target;
+  if (!d.classList || !d.classList.contains("trainer-group")) return;
+  if (d.open) collapsed.delete(d.dataset.group);
+  else collapsed.add(d.dataset.group);
+  localStorage.setItem(COLLAPSED_KEY, JSON.stringify([...collapsed]));
+}, true);
 
 // Variant checkboxes reflect the selection set; case/group checkboxes are
 // derived bulk toggles (indeterminate when partially selected).
@@ -136,6 +165,8 @@ function updateSelectionUI() {
     const n = keys.filter((k) => selection.has(k)).length;
     input.checked = n === keys.length;
     input.indeterminate = n > 0 && n < keys.length;
+    const count = trainerGroups.querySelector(`[data-count-group="${CSS.escape(input.dataset.group)}"]`);
+    if (count) count.textContent = `${n}/${keys.length} selected`;
   }
   selectCount.textContent = `${selection.size} / ${VARIANTS.length} variants selected`;
 }

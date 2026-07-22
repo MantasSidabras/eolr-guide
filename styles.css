@@ -797,6 +797,33 @@ kbd {
 
 .trainer-group { margin-top: 22px; }
 
+/* collapse: our rows use display:flex, which overrides the UA rule that hides
+   a closed <details>'s content, so hide everything but the summary ourselves */
+.trainer-group:not([open]) > :not(.tg-header) { display: none !important; }
+
+.tg-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  cursor: pointer;
+  list-style: none;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+/* replace the native disclosure triangle with our own rotating chevron */
+.tg-header::-webkit-details-marker { display: none; }
+
+.tg-header::before {
+  content: "▸";
+  color: var(--text-dim);
+  font-size: 13px;
+  transition: transform 0.15s;
+}
+
+.trainer-group[open] .tg-header::before { transform: rotate(90deg); }
+
 .tg-header label {
   display: inline-flex;
   align-items: center;
@@ -806,7 +833,12 @@ kbd {
   cursor: pointer;
 }
 
-.tg-header .bad-edges { margin-left: 12px; }
+.tg-count {
+  margin-left: auto;
+  color: var(--text-dim);
+  font-size: 13px;
+  font-weight: 600;
+}
 
 .trainer-case {
   display: flex;
