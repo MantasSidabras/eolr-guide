@@ -4,17 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EOLR — Roux LSE Tutorial</title>
+  <script>
+    // set before first paint to avoid a theme/layout flash
+    document.documentElement.dataset.theme =
+      localStorage.getItem("eolr-theme") ||
+      (matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark");
+    document.documentElement.dataset.images =
+      localStorage.getItem("eolr-images") || "on";
+    document.documentElement.dataset.marks =
+      localStorage.getItem("eolr-marks") || "off";
+</script>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="header-row">
       <h1>EOLR</h1>
-      <input type="search" id="search" placeholder="Search cases, algs, LR positions…" autocomplete="off">
+      <input type="search" id="search" placeholder="Search cases, algs…" autocomplete="off">
       <div class="overall-progress" title="Cases marked as learned">
         <span id="overall-count">0/0</span>
         <div class="bar-track"><div class="bar-fill" id="overall-bar"></div></div>
       </div>
+      <label class="switch-label">Images
+        <button id="images-toggle" class="switch" role="switch" aria-label="Show or hide cube images"></button>
+      </label>
+      <label class="switch-label">Highlight
+        <button id="marks-toggle" class="switch" role="switch" aria-label="Highlight moves from the description"></button>
+      </label>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark mode"></button>
     </div>
     <div class="header-row secondary">
       <nav id="group-nav" class="group-nav"></nav>
@@ -39,7 +56,7 @@
     <p class="legend">
       <span class="legend-item"><span class="swatch swatch-silver"></span> U/D color (oriented on top)</span>
       <span class="legend-item"><span class="swatch swatch-purple"></span> F/B color (misoriented on top)</span>
-      <span class="legend-item"><span class="swatch swatch-yellow"></span><span class="swatch swatch-orange"></span><span class="swatch swatch-red"></span> LR edges (yellow on top = oriented)</span>
+      <span class="legend-item"><span class="swatch swatch-yellow"></span><span class="swatch swatch-green"></span><span class="swatch swatch-blue"></span> LR edges (yellow on top = oriented)</span>
       <span class="legend-item"><span class="swatch swatch-gray"></span> ignored</span>
     </p>
   </section>
@@ -56,6 +73,7 @@
   </footer>
 
   <script src="data.js"></script>
+  <script src="scrambles.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
