@@ -208,7 +208,7 @@ const CASES = [
   {
     group: "1/1",
     name: "Best",
-    variants: [["UL", "UB"], ["UL", "DF"], ["UR", "DF"], ["UR", "DB"]],
+    variants: [["UL", "UB"], ["UL", "DF"], ["UR", "DF"]],
     alg: "U M' U' M' U M U M",
     recognition: "Both LR edges are oriented and exactly one is in the M-slice.",
     mcSolution: "Do an M move that puts the M-slice LR edge on U. Adjust the other LR edge to be across from where you just moved the first one to. Do an M move that puts that same edge on D. Stacked 3/1 from there.",
