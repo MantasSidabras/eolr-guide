@@ -144,7 +144,7 @@ const SOLUTION_MARKS = {
   "1/1::Best": [[0,4], [0,4], [0,4]],
   "1/1::Stacked": [[0,6]],
   "1/1::Good": [null, null],
-  "1/1::UF Adjacent": [null, null],
+  "1/1::UF Adjacent": [[0,4], [0,4]],
   "1/1::UF Separated": [null, null],
   "1/1::Sides": [null],
   "1/1::UF Opposite": [[0,3]],

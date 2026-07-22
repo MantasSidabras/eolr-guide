@@ -235,7 +235,7 @@ const CASES = [
     variants: [["UL", "UF"], ["UF", "UR"]],
     alg: "U M U M' U M U M",
     recognition: "One LR edge is UF and the other is adjacent to it.",
-    solution: "Adjust the U layer so the good LR edge is diagonal from the bad edge on D. Do an M move that keeps the good LR edge on top. Adjust the bad LR edge to be where the good LR edge just was. Undo the M move. Good 3/1 from there.",
+    solution: "Do an M move that keeps the bad LR edge in the U layer. Move the other LR edge to the same spot and repeat the same M move. Good 3/1 from there.",
   },
   {
     group: "1/1",
