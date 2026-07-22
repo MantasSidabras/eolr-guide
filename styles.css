@@ -14,6 +14,7 @@
   --gray: #404040;
   --green: #3fbf6f;
   --amber: #e0a83c;
+  --red: #e05c5c;
 }
 
 :root[data-theme="light"] {
@@ -29,6 +30,7 @@
   --image-glow: #dde3ea;
   --green: #1f9d55;
   --amber: #a3711c;
+  --red: #c03535;
 }
 
 * { box-sizing: border-box; }
@@ -584,3 +586,276 @@ main {
   color: var(--text-dim);
   font-size: 13px;
 }
+
+/* ----------------------------------------------------------------- trainer */
+/* view switching: data-view on <html> decides which page is visible */
+:root[data-view="trainer"] .intro,
+:root[data-view="trainer"] #cases,
+:root[data-view="trainer"] #no-results,
+:root[data-view="trainer"] .header-row.secondary,
+:root[data-view="trainer"] #search,
+:root[data-view="trainer"] .overall-progress { display: none !important; }
+
+:root[data-view="tutorial"] #trainer { display: none !important; }
+
+/* trainer sections use flex displays that would beat the UA [hidden] rule */
+#trainer [hidden] { display: none !important; }
+
+/* clear the sticky header when the browser scrolls to the #trainer anchor */
+#trainer { scroll-margin-top: 70px; }
+
+.view-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.view-tabs a {
+  padding: 5px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.view-tabs a:hover { border-color: var(--accent); }
+
+.view-tabs a.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+kbd {
+  font: 11px/1 "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  padding: 3px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-dim);
+}
+
+/* drill area */
+.drill-stage {
+  max-width: 560px;
+  margin: 24px auto 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+}
+
+#drill-hint {
+  margin: auto;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 16px;
+}
+
+#drill-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.drill-image {
+  background: radial-gradient(circle at 50% 40%, var(--image-glow), var(--surface-2));
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  padding: 12px 0;
+}
+
+.drill-image img {
+  width: 220px;
+  height: 220px;
+}
+
+.drill-meta {
+  margin: 0;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+#drill-desc {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.drill-desc-item {
+  margin: 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.drill-desc-item strong { color: var(--accent); }
+
+.drill-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+#drill-marking {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.drill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.drill-btn kbd { background: color-mix(in srgb, var(--surface-2) 50%, transparent); }
+
+.drill-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+}
+
+.drill-btn.primary kbd { color: var(--accent-contrast); border-color: transparent; }
+
+.drill-btn.correct { border-color: var(--green); color: var(--green); }
+.drill-btn.correct kbd { color: var(--green); }
+.drill-btn.wrong { border-color: var(--red); color: var(--red); }
+.drill-btn.wrong kbd { color: var(--red); }
+
+.drill-btn:hover { filter: brightness(1.15); }
+
+.drill-footer {
+  max-width: 560px;
+  margin: 10px auto 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+#session-score { color: var(--text); }
+
+/* case selection panel */
+.trainer-select { margin-top: 36px; }
+
+.select-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.select-toolbar h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.select-count {
+  color: var(--text-dim);
+  font-size: 14px;
+  margin-right: auto;
+}
+
+.toolbar-btn {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.toolbar-btn:hover { border-color: var(--accent); color: var(--text); }
+.toolbar-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+#trainer input[type="checkbox"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+  margin: 0;
+}
+
+.trainer-group { margin-top: 22px; }
+
+.tg-header label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tg-header .bad-edges { margin-left: 12px; }
+
+.trainer-case {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 7px 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.tc-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 170px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tc-variants {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.variant-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 13px;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.variant-check:hover { border-color: var(--accent); }
+
+.variant-check:has(input:checked) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.vc-name {
+  font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+  font-weight: 600;
+}
+
+.vc-rate { font-size: 12px; }
+.vc-good { color: var(--green); }
+.vc-weak { color: var(--amber); }

@@ -13,6 +13,8 @@
       localStorage.getItem("eolr-images") || "on";
     document.documentElement.dataset.marks =
       localStorage.getItem("eolr-marks") || "off";
+    document.documentElement.dataset.view =
+      location.hash === "#trainer" ? "trainer" : "tutorial";
 </script>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -20,6 +22,10 @@
   <header class="site-header">
     <div class="header-row">
       <h1>EOLR</h1>
+      <nav class="view-tabs">
+        <a href="#" data-view="tutorial">Tutorial</a>
+        <a href="#trainer" data-view="trainer">Trainer</a>
+      </nav>
       <input type="search" id="search" placeholder="Search cases, algs…" autocomplete="off">
       <div class="overall-progress" title="Cases marked as learned">
         <span id="overall-count">0/0</span>
@@ -64,6 +70,48 @@
   <main id="cases"></main>
   <p id="no-results" hidden>No cases match your search.</p>
 
+  <main id="trainer">
+    <section class="drill">
+      <div class="drill-stage">
+        <p id="drill-hint">Press <kbd>space</kbd> to start</p>
+        <div id="drill-card" hidden>
+          <div class="drill-image">
+            <img id="drill-image" alt="Case state" width="220" height="220">
+          </div>
+          <button class="alg scramble-row" id="drill-scramble" title="Click to copy"><span class="row-label">Scramble</span><code id="drill-scramble-code"></code><span class="copy-hint">copy</span></button>
+          <button class="alg" id="drill-solution" title="Click to copy" hidden><span class="row-label">Alg</span><code id="drill-solution-code"></code><span class="copy-hint">copy</span></button>
+          <p id="drill-meta" class="drill-meta" hidden></p>
+          <div id="drill-desc" hidden></div>
+          <div class="drill-actions">
+            <button id="drill-reveal" class="drill-btn primary">Reveal <kbd>space</kbd></button>
+            <span id="drill-marking" hidden>
+              <button id="drill-correct" class="drill-btn correct">Correct <kbd>y</kbd></button>
+              <button id="drill-wrong" class="drill-btn wrong">Wrong <kbd>n</kbd></button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="drill-footer">
+        <span>This session: <strong id="session-score">0/0</strong></span>
+        <label class="switch-label">Focus weak cases
+          <button id="weak-toggle" class="switch" role="switch" aria-label="Show weaker cases more often"></button>
+        </label>
+      </div>
+    </section>
+
+    <section class="trainer-select">
+      <div class="select-toolbar">
+        <h2>Cases</h2>
+        <span id="select-count" class="select-count"></span>
+        <button id="select-all" class="toolbar-btn">Select all</button>
+        <button id="select-none" class="toolbar-btn">Select none</button>
+        <button id="select-learning" class="toolbar-btn" title="Select the cases marked as Learning in the tutorial">Select learning</button>
+        <button id="stats-reset" class="toolbar-btn danger">Reset stats</button>
+      </div>
+      <div id="trainer-groups"></div>
+    </section>
+  </main>
+
   <footer class="site-footer">
     <p>
       Content from the <a href="https://docs.google.com/document/d/1dvGERLfN-0rVwN914HH1zRPHLfdM6d5rPfe0HxOMK08/edit" target="_blank" rel="noopener">EOLR doc</a>
@@ -75,5 +123,6 @@
   <script src="data.js"></script>
   <script src="scrambles.js"></script>
   <script src="app.js"></script>
+  <script src="trainer.js"></script>
 </body>
 </html>
