@@ -18,11 +18,31 @@ const VARIANT_BY_KEY = Object.fromEntries(VARIANTS.map((x) => [x.key, x]));
 // ---------------------------------------------------------------------------
 // View switching (initial data-view is set in index.html before first paint)
 // ---------------------------------------------------------------------------
+let countedView = null; // last view sent to analytics (avoids double counts)
+
+// Record a GoatCounter pageview for the current view, as a virtual path
+// (tutorial / trainer) so the two tabs show up separately in analytics. The
+// initial page load is counted automatically by GoatCounter's count.js (which
+// may still be loading async when this first runs), so we only send a hit when
+// the user actually switches views, not on the initial render.
+function countView(view) {
+  if (view === countedView) return;
+  const first = countedView === null;
+  countedView = view;
+  if (first) return; // initial load already counted by count.js
+  window.goatcounter?.count?.({
+    path: view === "trainer" ? "trainer" : "tutorial",
+    title: view === "trainer" ? "Trainer" : "Tutorial",
+    event: false,
+  });
+}
+
 function syncView() {
   const view = location.hash === "#trainer" ? "trainer" : "tutorial";
   document.documentElement.dataset.view = view;
   for (const a of document.querySelectorAll(".view-tabs a"))
     a.classList.toggle("active", a.dataset.view === view);
+  countView(view);
 }
 
 window.addEventListener("hashchange", syncView);
