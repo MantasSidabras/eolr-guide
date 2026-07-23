@@ -35,15 +35,17 @@ const COLORS = { W: "w", Y: "y", R: "r", O: "o", B: "b", G: "g" };
 const COLOR_NAMES = { W: "White", Y: "Yellow", R: "Red", O: "Orange", B: "Blue", G: "Green" };
 const COLOR_ORDER = ["W", "Y", "R", "O", "B", "G"];
 const OPPOSITE = { W: "Y", Y: "W", R: "O", O: "R", B: "G", G: "B" };
-// Side faces going clockwise viewed from each U colour (standard BOY scheme):
-// given F's position in this cycle, R is the next entry clockwise.
+// Side faces going clockwise viewed from each U colour (standard Western/BOY
+// scheme): given F's position in this cycle, R (right) is the next entry
+// clockwise. Derived from a single anchor — U=yellow, F=orange, R=blue (the
+// site's default ybosgm) — so e.g. red top + yellow front gives a blue right.
 const SIDE_CYCLE = {
-  W: ["G", "R", "B", "O"],
-  Y: ["G", "O", "B", "R"],
-  R: ["Y", "G", "W", "B"],
-  O: ["Y", "B", "W", "G"],
-  B: ["Y", "R", "W", "O"],
-  G: ["Y", "O", "W", "R"],
+  Y: ["O", "B", "R", "G"],
+  W: ["O", "G", "R", "B"],
+  O: ["Y", "G", "W", "B"],
+  R: ["Y", "B", "W", "G"],
+  B: ["Y", "O", "W", "R"],
+  G: ["Y", "R", "W", "O"],
 };
 
 // Front colours valid for a given top: any side face in U's cycle (i.e. not U
