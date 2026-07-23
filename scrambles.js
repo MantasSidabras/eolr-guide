@@ -151,7 +151,7 @@ const SOLUTION_MARKS = {
   "1/1::Sides": [null],
   "1/1::UF Opposite": [[0,3]],
   "1/1::Bottom": [[0,3]],
-  "1/1::Bad": [null],
+  "1/1::Bad": [[0,10]],
   "2o/0::Best": [null, null],
   "2o/0::Misoriented": [[0,3]],
   "2o/0::Stacked": [[0,3], [0,4]],
