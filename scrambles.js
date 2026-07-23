@@ -117,7 +117,7 @@ const SOLUTIONS = {
   "0/2::Opposite": ["M' U M U M U2 M' U M"],
   "4/2::Adjacent": ["M U M U M' U M U2 M'", "M U' M' U M U M U2 M", "M U M U2 M U M' U M'"],
   "4/2::Opposite": ["U M' U M' U2 M' U M U M' U M'"],
-  "4/2::Bottom": ["M' U M U2 M U M' U M U M"],
+  "4/2::Bottom": ["U' M' U M U2 M U M' U M U M"],
 };
 
 const SOLUTION_MARKS = {
@@ -171,7 +171,7 @@ const SOLUTION_MARKS = {
   "0/2::Opposite": [[0,3]],
   "4/2::Adjacent": [null, null, null],
   "4/2::Opposite": [[0,4]],
-  "4/2::Bottom": [[0,3]],
+  "4/2::Bottom": [[1,3]],
 };
 
 const VARIANT_COLOR_SWAP = {

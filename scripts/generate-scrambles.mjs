@@ -298,6 +298,9 @@ const ALG_OVERRIDES = {
   "1/1::Bad::0": { alg: "U M' U' M U' M U2 M' U M'", mark: [0, 4] },
   "3/1::Adjacent::0": { alg: "U M' U2 M U M", mark: [0, 4] },
   "3/1::Adjacent::1": { alg: "U' M' U2 M U' M", mark: [0, 4] },
+  // leading U' kept explicit: it adjusts the LR position for this special case
+  // before the described "M' U M" reduction into Good 1/1.
+  "4/2::Bottom::0": { alg: "U' M' U M U2 M U M' U M U M", mark: [1, 3] },
 };
 
 // Candidates for head + tail: given a fixed `head` (this case's own moves),
