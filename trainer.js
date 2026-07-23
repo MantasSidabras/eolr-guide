@@ -34,6 +34,7 @@ const SELECTION_KEY = "eolr-trainer-selection";
 const STATS_KEY = "eolr-trainer-stats";
 const WEAK_KEY = "eolr-trainer-weak";
 const COLLAPSED_KEY = "eolr-trainer-collapsed";
+const SESSION_KEY = "eolr-trainer-session";
 
 function loadCollapsed() {
   try {
@@ -73,6 +74,19 @@ let stats = loadStats();
 
 function saveStats() {
   localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+}
+
+// Running session tally; persisted so a page refresh keeps the current run.
+function loadSession() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(SESSION_KEY));
+    if (raw && typeof raw.correct === "number" && typeof raw.attempts === "number") return raw;
+  } catch {}
+  return { correct: 0, attempts: 0 };
+}
+
+function saveSession() {
+  localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 }
 
 // ---------------------------------------------------------------------------
@@ -240,7 +254,7 @@ function updateSessionScore() {
 let state = "idle"; // "idle" | "scramble" | "revealed"
 let current = null; // variant key being drilled
 let lastKey = null; // previous key, to avoid immediate repeats
-let session = { correct: 0, attempts: 0 };
+let session = loadSession();
 
 // Weighted random pick among selected variants. In weak mode a variant's
 // weight grows as its success rate drops (unattempted counts as weakest):
@@ -321,6 +335,7 @@ function mark(ok) {
   saveStats();
   session.attempts += 1;
   if (ok) session.correct += 1;
+  saveSession();
   updateSessionScore();
   updateRate(current);
   lastKey = current;
@@ -340,6 +355,7 @@ function resetStats() {
   stats = {};
   localStorage.removeItem(STATS_KEY);
   session = { correct: 0, attempts: 0 };
+  localStorage.removeItem(SESSION_KEY);
   updateSessionScore();
   for (const el of trainerGroups.querySelectorAll("[data-rate-key]")) {
     el.textContent = "—";
@@ -409,3 +425,4 @@ applyWeak();
 renderSelection();
 syncView();
 updateIdleHint();
+updateSessionScore();
