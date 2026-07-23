@@ -759,6 +759,11 @@ kbd {
 
 #session-score { color: var(--text); }
 
+.session-pct { font-weight: 700; }
+.session-pct.pct-good { color: var(--green); }
+.session-pct.pct-mid { color: var(--amber); }
+.session-pct.pct-low { color: var(--red); }
+
 /* case selection panel */
 .trainer-select { margin-top: 36px; }
 

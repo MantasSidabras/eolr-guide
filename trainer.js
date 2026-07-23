@@ -220,6 +220,22 @@ const drillDesc = document.getElementById("drill-desc");
 const drillReveal = document.getElementById("drill-reveal");
 const drillMarking = document.getElementById("drill-marking");
 const sessionScore = document.getElementById("session-score");
+const sessionPct = document.getElementById("session-pct");
+
+// Session success rate as a colour-coded percentage: red below 50%, amber
+// 50–79%, green at 80%+. Blank until at least one attempt.
+function updateSessionScore() {
+  sessionScore.textContent = `${session.correct}/${session.attempts}`;
+  if (!session.attempts) {
+    sessionPct.textContent = "";
+    sessionPct.className = "session-pct";
+    return;
+  }
+  const pct = Math.round((session.correct / session.attempts) * 100);
+  sessionPct.textContent = `${pct}%`;
+  sessionPct.className =
+    "session-pct " + (pct >= 80 ? "pct-good" : pct >= 50 ? "pct-mid" : "pct-low");
+}
 
 let state = "idle"; // "idle" | "scramble" | "revealed"
 let current = null; // variant key being drilled
@@ -305,7 +321,7 @@ function mark(ok) {
   saveStats();
   session.attempts += 1;
   if (ok) session.correct += 1;
-  sessionScore.textContent = `${session.correct}/${session.attempts}`;
+  updateSessionScore();
   updateRate(current);
   lastKey = current;
   next();
@@ -324,7 +340,7 @@ function resetStats() {
   stats = {};
   localStorage.removeItem(STATS_KEY);
   session = { correct: 0, attempts: 0 };
-  sessionScore.textContent = "0/0";
+  updateSessionScore();
   for (const el of trainerGroups.querySelectorAll("[data-rate-key]")) {
     el.textContent = "—";
     el.className = "vc-rate";
