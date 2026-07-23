@@ -71,6 +71,12 @@ a { color: var(--accent); }
   justify-content: space-between;
 }
 
+.site-logo {
+  display: block;
+  flex-shrink: 0;
+  margin-right: -6px; /* sit close to the wordmark */
+}
+
 .site-header h1 {
   margin: 0;
   font-size: 24px;

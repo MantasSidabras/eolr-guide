@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EOLR cube logo">
+  <!-- Isometric cube in the VisualCube color scheme (yellow top U, orange
+       front F, blue right R) with an archery bow and arrow aimed at it.
+       EOLR recognition talks about "the arrow" formed by the bad edges. -->
+  <defs>
+    <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff35a"/>
+      <stop offset="1" stop-color="#f4d200"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff9e3d"/>
+      <stop offset="1" stop-color="#e8730f"/>
+    </linearGradient>
+    <linearGradient id="right" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2f6bff"/>
+      <stop offset="1" stop-color="#1745d6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- cube body, lower-right so the bow has room upper-left -->
+  <g stroke="#12161c" stroke-width="1.8" stroke-linejoin="round">
+    <path d="M36 30 L57 42 L36 54 L15 42 Z" fill="url(#top)"/>
+    <path d="M15 42 L36 54 L36 63 L15 52 Z" fill="url(#front)"/>
+    <path d="M57 42 L36 54 L36 63 L57 52 Z" fill="url(#right)"/>
+    <path d="M22 38 L43 50 M29 34 L50 46" fill="none" stroke-opacity="0.35"/>
+    <path d="M29 50 L50 38 M22 46 L43 34" fill="none" stroke-opacity="0.35"/>
+  </g>
+
+  <!-- archery bow: a bold C-arc opening right, with a taut dark string -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M10 6 Q26 24 10 42" stroke="#b06a1f" stroke-width="4"/>
+    <path d="M10 6 L10 42" stroke="#12161c" stroke-width="1.4" stroke-opacity="0.55"/>
+  </g>
+
+  <!-- arrow: nocked at the string, pointing right into the cube's top -->
+  <g stroke-linecap="round" stroke-linejoin="round">
+    <line x1="10" y1="24" x2="40" y2="24" stroke="#6b7684" stroke-width="2.4"/>
+    <!-- fletching -->
+    <path d="M12 24 L8 20 M12 24 L8 28" stroke="#ff5d8f" stroke-width="1.8"/>
+    <!-- head -->
+    <path d="M46 24 L37 19 L40 24 L37 29 Z" fill="#ff5d8f" stroke="#12161c" stroke-width="1.1"/>
+  </g>
+</svg>
