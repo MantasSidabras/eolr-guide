@@ -291,10 +291,11 @@ const memo = new Map();
 // Hand-supplied algs for cases whose Solution description the automatic
 // deriver can't reproduce (its cube model reasons about positions, not the
 // exact edge routing some descriptions imply). Keyed by "group::name::vi".
-// Each is verified to solve like any other, and its whole move list is
-// highlighted (the description covers the entire alg).
+// Each alg is verified to solve like any other. `mark` is the [start, length]
+// highlight span for the described sub-sequence; omit it to highlight the
+// whole alg.
 const ALG_OVERRIDES = {
-  "1/1::Bad::0": "U M' U' M U' M U2 M' U M'",
+  "1/1::Bad::0": { alg: "U M' U' M U' M U2 M' U M'", mark: [0, 4] },
 };
 
 // Candidates for head + tail: given a fixed `head` (this case's own moves),
@@ -331,9 +332,9 @@ function algFor(c, vi) {
   const start = canonical(c, c.variants[vi]);
 
   if (ALG_OVERRIDES[id]) {
-    const alg = ALG_OVERRIDES[id];
+    const { alg, mark } = ALG_OVERRIDES[id];
     if (!isDone(run(start, alg))) throw new Error("override does not solve " + id);
-    const result = { alg, mark: [0, alg.split(" ").length] };
+    const result = { alg, mark: mark || [0, alg.split(" ").length] };
     memo.set(id, result);
     return result;
   }
