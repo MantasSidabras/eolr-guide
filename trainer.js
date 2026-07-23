@@ -148,10 +148,21 @@ function renderSelection() {
   updateSelectionUI();
 }
 
-// A <summary> containing an interactive control still toggles the <details>
-// when that control is clicked; stop the group checkbox from collapsing it.
+// The group checkbox lives inside the <summary>, so a click both toggles the
+// <details> and would flip the box. preventDefault stops the accordion — but
+// it also cancels the box's native toggle (and its change event), so we drive
+// the selection ourselves: full → deselect all, otherwise → select all.
 trainerGroups.addEventListener("click", (e) => {
-  if (e.target.closest(".group-check")) e.preventDefault();
+  const groupCheck = e.target.closest(".group-check");
+  if (!groupCheck) return;
+  e.preventDefault();
+  const keys = variantKeysForGroup(groupCheck.dataset.group);
+  const allSelected = keys.every((k) => selection.has(k));
+  setSelected(keys, !allSelected);
+  // The browser applies the checkbox's native toggle after this handler, which
+  // can override the state updateSelectionUI just set; re-sync on the next
+  // frame so the box reflects the real selection.
+  requestAnimationFrame(updateSelectionUI);
 });
 
 // Persist which groups are collapsed so the accordion survives reloads.
@@ -197,8 +208,8 @@ trainerGroups.addEventListener("change", (e) => {
   if (input.dataset.key) setSelected([input.dataset.key], input.checked);
   else if (input.classList.contains("case-check"))
     setSelected(variantKeysForCase(input.dataset.case), input.checked);
-  else if (input.classList.contains("group-check"))
-    setSelected(variantKeysForGroup(input.dataset.group), input.checked);
+  // group checkbox is handled in the click listener above (its native toggle
+  // is prevented so this change event never fires for it)
 });
 
 // ---------------------------------------------------------------------------
@@ -230,6 +241,7 @@ const drillScrambleCode = document.getElementById("drill-scramble-code");
 const drillSolution = document.getElementById("drill-solution");
 const drillSolutionCode = document.getElementById("drill-solution-code");
 const drillMeta = document.getElementById("drill-meta");
+const drillRecognition = document.getElementById("drill-recognition");
 const drillDesc = document.getElementById("drill-desc");
 const drillReveal = document.getElementById("drill-reveal");
 const drillMarking = document.getElementById("drill-marking");
@@ -309,6 +321,7 @@ function next() {
   drillScrambleCode.textContent = scrambleFor(x.c, x.vi);
   drillSolution.hidden = true;
   drillMeta.hidden = true;
+  drillRecognition.hidden = true;
   drillDesc.hidden = true;
   drillMarking.hidden = true;
   drillReveal.hidden = false;
@@ -321,6 +334,12 @@ function reveal() {
   const x = VARIANT_BY_KEY[current];
   drillSolutionCode.innerHTML = algHtml(solutionFor(x.c, x.vi), markFor(x.c, x.vi));
   drillMeta.textContent = `${x.c.name} ${x.c.group} — ${variantLabel(x.c.variants[x.vi])}`;
+  if (x.c.recognition) {
+    drillRecognition.innerHTML = `<strong>Recognition:</strong> ${x.c.recognition}`;
+    drillRecognition.hidden = false;
+  } else {
+    drillRecognition.hidden = true;
+  }
   const descs = [
     x.c.solution ? { title: "Solution", text: x.c.solution } : null,
     x.c.mcSolution ? { title: "MC Solution", text: x.c.mcSolution } : null,
