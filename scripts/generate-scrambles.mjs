@@ -47,6 +47,35 @@ function applyMove(s, move) {
   return { lr, bad, u, m };
 }
 const run = (s, alg) => alg.split(/\s+/).filter(Boolean).reduce(applyMove, s);
+
+// -- Color-aware pass (image green/blue) -----------------------------------
+// The boolean model above treats the two LR edges as interchangeable, so it
+// can't say which physical color (green = L, blue = R) a scramble deposits in
+// each slot. imageUrl colors variant[0] green and variant[1] blue by array
+// order, which needn't agree. This tiny second model tracks each LR edge's
+// identity so we can emit, per variant, whether the image's colors must be
+// swapped to match the real cube the scramble produces.
+// A solved cube has green (L) at UL and blue (R) at UR.
+function applyMoveColor(slots, move) {
+  const times = move.endsWith("2") ? 2 : move.endsWith("'") ? 3 : 1;
+  const isU = move[0] === "U";
+  const perm = isU ? U_PERM : M_PERM;
+  let s = slots;
+  for (let i = 0; i < times; i++) s = perm.map((p) => s[p]);
+  return s;
+}
+const runColor = (s, alg) => alg.split(/\s+/).filter(Boolean).reduce(applyMoveColor, s);
+
+// Does the scramble land variant[0]'s slot in green and variant[1]'s in blue
+// (false), or are they swapped relative to imageUrl's array-order coloring
+// (true)? Returns the boolean the image should use to correct its colors.
+function colorSwap(v, scramble) {
+  const solved = Array(6).fill(null);
+  solved[SLOTS.indexOf("UL")] = "G";
+  solved[SLOTS.indexOf("UR")] = "B";
+  const end = runColor(solved, scramble);
+  return end[SLOTS.indexOf(v[0])] !== "G"; // green isn't where the image drew it
+}
 const MOVES = ["U", "U'", "U2", "M", "M'", "M2"];
 const posKey = (s) => s.lr.join("") + s.bad.join("");
 const fullKey = (s) => posKey(s) + s.u + s.m;
@@ -328,21 +357,24 @@ function algFor(c, vi) {
   return result;
 }
 
-const scrambleLines = [], solutionLines = [], markLines = [];
+const scrambleLines = [], solutionLines = [], markLines = [], colorLines = [];
 for (const c of CASES) {
-  const scrambles = [], solutions = [], marks = [];
+  const scrambles = [], solutions = [], marks = [], swaps = [];
   c.variants.forEach((v, vi) => {
     const p = paths.get(fullKey(canonical(c, v)));
     if (!p) throw new Error(`unreachable: ${c.group} ${c.name} ${v}`);
-    scrambles.push(p.join(" "));
+    const scramble = p.join(" ");
+    scrambles.push(scramble);
     const r = algFor(c, vi);
     solutions.push(r.alg);
     marks.push(r.mark);
+    swaps.push(colorSwap(v, scramble));
   });
   const k = JSON.stringify(`${c.group}::${c.name}`);
   scrambleLines.push(`  ${k}: [${scrambles.map((s) => JSON.stringify(s)).join(", ")}],`);
   solutionLines.push(`  ${k}: [${solutions.map((s) => JSON.stringify(s)).join(", ")}],`);
   markLines.push(`  ${k}: [${marks.map((m) => JSON.stringify(m)).join(", ")}],`);
+  colorLines.push(`  ${k}: [${swaps.map((s) => JSON.stringify(s)).join(", ")}],`);
 }
 
 const out = [];
@@ -356,6 +388,8 @@ out.push("// the text specifies (e.g. \"Do M' U M'\") and, for referenced cases,
 out.push("// the referenced case's own alg. Finishes with both LR edges on the bottom (DF/DB).");
 out.push("// SOLUTION_MARKS: [startIndex, length] of the described sub-sequence within each");
 out.push("// alg's move list (null if none) — used by the highlight toggle.");
+out.push("// VARIANT_COLOR_SWAP: true when the scramble lands the green/blue LR edges in the");
+out.push("// opposite slots from imageUrl's array-order coloring; the image swaps to match.");
 out.push("// Keys are 'group::case'; arrays are parallel to each case's variants list.");
 out.push("");
 out.push("const SCRAMBLES = {");
@@ -368,5 +402,9 @@ out.push("};");
 out.push("");
 out.push("const SOLUTION_MARKS = {");
 out.push(...markLines);
+out.push("};");
+out.push("");
+out.push("const VARIANT_COLOR_SWAP = {");
+out.push(...colorLines);
 out.push("};");
 console.log(out.join("\n"));

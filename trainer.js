@@ -4,7 +4,7 @@
 // Trainer — drill randomly picked case variants and track success rates.
 // Loaded after data.js / scrambles.js / app.js and reuses their globals:
 // CASES, GROUPS, caseId, imageUrl, scrambleFor, solutionFor, markFor,
-// algHtml, variantLabel. Copying the scramble/alg rows is handled by
+// colorSwapFor, algHtml, variantLabel. Copying the scramble/alg rows is handled by
 // app.js's document-level ".alg" click listener.
 // ---------------------------------------------------------------------------
 
@@ -267,7 +267,7 @@ function next() {
   state = "scramble";
   current = key;
   const x = VARIANT_BY_KEY[key];
-  drillImage.src = imageUrl(x.c.group, x.c.variants[x.vi]);
+  drillImage.src = imageUrl(x.c.group, x.c.variants[x.vi], colorSwapFor(x.c, x.vi));
   drillScrambleCode.textContent = scrambleFor(x.c, x.vi);
   drillSolution.hidden = true;
   drillMeta.hidden = true;

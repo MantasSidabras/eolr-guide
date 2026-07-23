@@ -8,6 +8,8 @@
 // the referenced case's own alg. Finishes with both LR edges on the bottom (DF/DB).
 // SOLUTION_MARKS: [startIndex, length] of the described sub-sequence within each
 // alg's move list (null if none) — used by the highlight toggle.
+// VARIANT_COLOR_SWAP: true when the scramble lands the green/blue LR edges in the
+// opposite slots from imageUrl's array-order coloring; the image swaps to match.
 // Keys are 'group::case'; arrays are parallel to each case's variants list.
 
 const SCRAMBLES = {
@@ -170,4 +172,58 @@ const SOLUTION_MARKS = {
   "4/2::Adjacent": [null, null, null],
   "4/2::Opposite": [[0,4]],
   "4/2::Bottom": [[0,3]],
+};
+
+const VARIANT_COLOR_SWAP = {
+  "3/1::Stacked": [false],
+  "3/1::Good": [false, false, true, true],
+  "3/1::Bottom": [true],
+  "3/1::Adjacent": [false, false],
+  "3/1::Bad": [true, true, false, true, false, false],
+  "4/0::Opposite": [true, true],
+  "4/0::Good": [true, true],
+  "4/0::Adjacent": [false],
+  "4/0::Bottom": [false],
+  "2o/2::Bottom": [true],
+  "2o/2::Adjacent": [true, false],
+  "2o/2::Decent": [true, false],
+  "2o/2::Misoriented Opposite": [false],
+  "2o/2::Stacked": [true],
+  "2o/2::Oriented Opposite": [true],
+  "2a/2::Best": [true],
+  "2a/2::Great": [false, false, false, true],
+  "2a/2::Opposite": [false],
+  "2a/2::Stacked": [true, true, false, false],
+  "2a/2::Bottom": [true],
+  "2a/2::Mixed Adjacent": [false, false],
+  "2a/2::Oriented Adjacent": [false],
+  "1/1::Best": [false, true, false],
+  "1/1::Stacked": [false],
+  "1/1::Good": [false, true],
+  "1/1::UF Adjacent": [false, false],
+  "1/1::UF Separated": [true, false],
+  "1/1::Sides": [false],
+  "1/1::UF Opposite": [false],
+  "1/1::Bottom": [true],
+  "1/1::Bad": [true],
+  "2o/0::Best": [false, true],
+  "2o/0::Misoriented": [false],
+  "2o/0::Stacked": [true, false],
+  "2o/0::Adjacent": [true, false],
+  "2o/0::Opposite": [false],
+  "2o/0::Bottom": [true],
+  "2a/0::Best": [true, false],
+  "2a/0::Stacked": [true, true, true, true],
+  "2a/0::Good": [false, false, true, true],
+  "2a/0::Bottom": [false],
+  "2a/0::Oriented Adjacent": [false],
+  "2a/0::Opposite": [false, false],
+  "2a/0::Misoriented Adjacent": [false],
+  "0/2::Adjacent": [false, false],
+  "0/2::Bottom": [true],
+  "0/2::Good": [false, false, true, false],
+  "0/2::Opposite": [false],
+  "4/2::Adjacent": [true, true, false],
+  "4/2::Opposite": [true],
+  "4/2::Bottom": [false],
 };

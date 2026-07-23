@@ -23,7 +23,9 @@ const FACELETS = {
 
 const VISUALCUBE = "https://visualcube.api.cubing.net/visualcube.php";
 
-function imageUrl(groupId, variant) {
+// `swap` (from VARIANT_COLOR_SWAP) flips which LR edge is green vs blue so the
+// diagram matches the physical cube the variant's scramble produces.
+function imageUrl(groupId, variant, swap) {
   const badEdges = GROUPS.find((g) => g.id === groupId).badEdges;
   const fd = Array(54).fill("n");
   // solved background pieces
@@ -38,7 +40,8 @@ function imageUrl(groupId, variant) {
     const bad = badEdges.includes(pos);
     const lrIdx = variant.indexOf(pos);
     if (lrIdx >= 0) {
-      const lr = lrIdx === 0 ? "l" : "r"; // green / blue side color
+      const greenFirst = swap ? lrIdx === 1 : lrIdx === 0;
+      const lr = greenFirst ? "l" : "r"; // green / blue side color
       fd[udIdx] = bad ? lr : "u";
       fd[sideIdx] = bad ? "u" : lr;
     } else {
@@ -178,6 +181,10 @@ function markFor(c, variantIndex) {
   return (SOLUTION_MARKS[caseId(c)] || [])[variantIndex] || null;
 }
 
+function colorSwapFor(c, variantIndex) {
+  return (VARIANT_COLOR_SWAP[caseId(c)] || [])[variantIndex] || false;
+}
+
 // Render an alg string as HTML, wrapping the described sub-sequence (per the
 // [start, length] mark) in <span class="alg-mark"> for the highlight toggle.
 function algHtml(alg, mark) {
@@ -225,7 +232,7 @@ function renderCaseCard(c) {
     .map(
       (v, i) =>
         `<button class="variant-thumb${i === 0 ? " active" : ""}" data-case="${id}" data-variant="${i}" title="LR edges in ${variantLabel(v)}">
-           <img src="${imageUrl(c.group, v)}" alt="Variant ${variantLabel(v)}" loading="lazy">
+           <img src="${imageUrl(c.group, v, colorSwapFor(c, i))}" alt="Variant ${variantLabel(v)}" loading="lazy">
            <span>${variantLabel(v)}</span>
          </button>`
     )
@@ -250,7 +257,7 @@ function renderCaseCard(c) {
               .toLowerCase()
               .replace(/"/g, "")}">
     <div class="case-image">
-      <img class="main-image" src="${imageUrl(c.group, c.variants[0])}" alt="${c.group} ${c.name}" loading="lazy">
+      <img class="main-image" src="${imageUrl(c.group, c.variants[0], colorSwapFor(c, 0))}" alt="${c.group} ${c.name}" loading="lazy">
     </div>
     ${thumbs}
     <div class="case-body">
@@ -428,7 +435,7 @@ document.addEventListener("click", (e) => {
 function selectVariant(card, idx) {
   const cse = CASE_BY_ID[card.dataset.id];
   const thumbs = card.querySelectorAll(".variant-thumb");
-  card.querySelector(".main-image").src = imageUrl(cse.group, cse.variants[idx]);
+  card.querySelector(".main-image").src = imageUrl(cse.group, cse.variants[idx], colorSwapFor(cse, idx));
   card.querySelector(".scramble-code").textContent = scrambleFor(cse, idx);
   card.querySelector(".alg-code").innerHTML = algHtml(solutionFor(cse, idx), markFor(cse, idx));
   thumbs.forEach((t, i) => t.classList.toggle("active", i === idx));
