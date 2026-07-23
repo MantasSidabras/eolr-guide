@@ -1,7 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="EOLR cube logo">
   <!-- Isometric cube in the VisualCube color scheme (yellow top U, orange
-       front F, blue right R) with an archery bow and arrow aimed at it.
-       EOLR recognition talks about "the arrow" formed by the bad edges. -->
+       front F, blue right R) with a drawn archery bow aimed at it — a nod to
+       the "arrow" the EOLR bad edges form. The bow limbs bow toward the cube
+       and the string is pulled back into a V at the arrow's nock. -->
   <defs>
     <linearGradient id="top" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#fff35a"/>
@@ -26,18 +27,22 @@
     <path d="M29 50 L50 38 M22 46 L43 34" fill="none" stroke-opacity="0.35"/>
   </g>
 
-  <!-- archery bow: a bold C-arc opening right, with a taut dark string -->
-  <g fill="none" stroke-linecap="round">
-    <path d="M10 6 Q26 24 10 42" stroke="#b06a1f" stroke-width="4"/>
-    <path d="M10 6 L10 42" stroke="#12161c" stroke-width="1.4" stroke-opacity="0.55"/>
+  <!-- drawn bow: limbs bow toward the target (right); string pulled back to a
+       V at the nock on the left -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- bowstring: tip -> nock -> tip (the drawn V); light so it reads on both
+         the dark header and the light theme -->
+    <path d="M20 4 L8 24 L20 44" stroke="#cbd3dc" stroke-width="1.4"/>
+    <!-- bow limbs, curving right toward the cube -->
+    <path d="M20 4 Q34 24 20 44" stroke="#b06a1f" stroke-width="4"/>
   </g>
 
-  <!-- arrow: nocked at the string, pointing right into the cube's top -->
+  <!-- arrow nocked at the string's V, pointing right into the cube's top -->
   <g stroke-linecap="round" stroke-linejoin="round">
-    <line x1="10" y1="24" x2="40" y2="24" stroke="#6b7684" stroke-width="2.4"/>
-    <!-- fletching -->
-    <path d="M12 24 L8 20 M12 24 L8 28" stroke="#ff5d8f" stroke-width="1.8"/>
-    <!-- head -->
-    <path d="M46 24 L37 19 L40 24 L37 29 Z" fill="#ff5d8f" stroke="#12161c" stroke-width="1.1"/>
+    <line x1="8" y1="24" x2="42" y2="24" stroke="#6b7684" stroke-width="2.4"/>
+    <!-- fletching at the nock -->
+    <path d="M10 24 L6 20 M10 24 L6 28" stroke="#ff5d8f" stroke-width="1.8"/>
+    <!-- arrowhead aimed at the cube -->
+    <path d="M48 24 L39 19 L42 24 L39 29 Z" fill="#ff5d8f" stroke="#12161c" stroke-width="1.1"/>
   </g>
 </svg>
