@@ -288,6 +288,15 @@ function simplifyJoin(head, tail) {
 
 const memo = new Map();
 
+// Hand-supplied algs for cases whose Solution description the automatic
+// deriver can't reproduce (its cube model reasons about positions, not the
+// exact edge routing some descriptions imply). Keyed by "group::name::vi".
+// Each is verified to solve like any other, and its whole move list is
+// highlighted (the description covers the entire alg).
+const ALG_OVERRIDES = {
+  "1/1::Bad::0": "U M' U' M U' M U2 M' U M'",
+};
+
 // Candidates for head + tail: given a fixed `head` (this case's own moves),
 // try every shortest solving tail of the sub-case the head leaves, yielding a
 // candidate per tail. Simplify each whole alg, mark the HEAD span, and score
@@ -320,6 +329,15 @@ function algFor(c, vi) {
   const id = `${c.group}::${c.name}::${vi}`;
   if (memo.has(id)) return memo.get(id);
   const start = canonical(c, c.variants[vi]);
+
+  if (ALG_OVERRIDES[id]) {
+    const alg = ALG_OVERRIDES[id];
+    if (!isDone(run(start, alg))) throw new Error("override does not solve " + id);
+    const result = { alg, mark: [0, alg.split(" ").length] };
+    memo.set(id, result);
+    return result;
+  }
+
   const ref = referencedCase(c);
   const explicit = describedMoves(c);
   const tokens = directionalTokens(c);

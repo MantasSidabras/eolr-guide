@@ -97,7 +97,7 @@ const SOLUTIONS = {
   "1/1::Sides": ["U M' U' M U2 M U M"],
   "1/1::UF Opposite": ["M U M' U2 M U2 M' U M'"],
   "1/1::Bottom": ["M' U M U2 M U2 M U' M"],
-  "1/1::Bad": ["U M U2 M U' M' U' M U' M"],
+  "1/1::Bad": ["U M' U' M U' M U2 M' U M'"],
   "2o/0::Best": ["M' U' M U M", "M' U M U' M"],
   "2o/0::Misoriented": ["M' U M U' M' U M'"],
   "2o/0::Stacked": ["M U' M' U M U M'", "U2 M' U' M U M' U M"],

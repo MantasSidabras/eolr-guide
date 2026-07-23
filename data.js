@@ -275,7 +275,7 @@ const CASES = [
     variants: [["UB", "DF"]],
     alg: "M U' M U' M U2 M U' M' U' M U",
     recognition: "Both LR edges are oriented on the M slice.",
-    solution: "Adjust the U face and do M U2 M to set up the LR edges, then finish with U' M' U' M U' M.",
+    solution: "Adjust the top bad edge to be on the side. Do an M move that keeps the bottom bad edge on D. Adjust the top bad edge to be above the bottom bad edge. Undo the M move. Adjacent 3/1 from there.",
   },
 
   // ---------------- 2o/0 (UF/UB) ----------------
