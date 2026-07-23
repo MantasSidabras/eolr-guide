@@ -49,7 +49,6 @@ const CASES = [
     variants: [["UR", "UF"], ["UL", "UF"]],
     alg: "M' U M U M2 U M U2 M U'",
     recognition: "Both LR edges are bad and adjacent to each other.",
-    solution: "See Bad 3/1.",
     mcSolution: "Adjust the non-tip LR edge to be over the bottom bad edge. Do an M move that puts the bottom bad edge on U. Do a U2. Undo the M move. Stacked 3/1 from there.",
   },
   {

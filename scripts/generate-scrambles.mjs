@@ -296,6 +296,8 @@ const memo = new Map();
 // whole alg.
 const ALG_OVERRIDES = {
   "1/1::Bad::0": { alg: "U M' U' M U' M U2 M' U M'", mark: [0, 4] },
+  "3/1::Adjacent::0": { alg: "U M' U2 M U M", mark: [0, 4] },
+  "3/1::Adjacent::1": { alg: "U' M' U2 M U' M", mark: [0, 4] },
 };
 
 // Candidates for head + tail: given a fixed `head` (this case's own moves),
