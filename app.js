@@ -23,6 +23,49 @@ const FACELETS = {
 
 const VISUALCUBE = "https://visualcube.api.cubing.net/visualcube.php";
 
+// ---------------------------------------------------------------------------
+// Cube colour scheme
+// ---------------------------------------------------------------------------
+// VisualCube's `sch` is 6 chars in face order U,R,F,D,L,B, each a colour code
+// (w=white y=yellow r=red o=orange b=blue g=green s=silver m=magenta). The
+// user picks the top (U) and front (F) colours; the rest derive from a fixed
+// standard-cube (BOY) orientation so the result is always a real cube. D and
+// B stay placeholder silver/magenta so misoriented pieces keep standing out.
+const COLORS = { W: "w", Y: "y", R: "r", O: "o", B: "b", G: "g" };
+const COLOR_NAMES = { W: "White", Y: "Yellow", R: "Red", O: "Orange", B: "Blue", G: "Green" };
+const COLOR_ORDER = ["W", "Y", "R", "O", "B", "G"];
+const OPPOSITE = { W: "Y", Y: "W", R: "O", O: "R", B: "G", G: "B" };
+// Side faces going clockwise viewed from each U colour (standard BOY scheme):
+// given F's position in this cycle, R is the next entry clockwise.
+const SIDE_CYCLE = {
+  W: ["G", "R", "B", "O"],
+  Y: ["G", "O", "B", "R"],
+  R: ["Y", "G", "W", "B"],
+  O: ["Y", "B", "W", "G"],
+  B: ["Y", "R", "W", "O"],
+  G: ["Y", "O", "W", "R"],
+};
+
+// Front colours valid for a given top: any side face in U's cycle (i.e. not U
+// and not U's opposite).
+function validFronts(u) {
+  return SIDE_CYCLE[u].slice();
+}
+
+// Build the 6-char `sch` string (U,R,F,D,L,B) from top/front colour keys,
+// keeping D and B as placeholders (silver / magenta).
+function deriveScheme(u, f) {
+  const cycle = SIDE_CYCLE[u];
+  const fi = cycle.indexOf(f);
+  if (fi < 0) return "ybosgm"; // invalid pair: fall back to default
+  const r = cycle[(fi + 1) % 4];
+  const l = OPPOSITE[r];
+  // order U R F D L B; D and B placeholders
+  return COLORS[u] + COLORS[r] + COLORS[f] + "s" + COLORS[l] + "m";
+}
+
+let currentScheme = "ybosgm";
+
 // `swap` (from VARIANT_COLOR_SWAP) flips which LR edge is green vs blue so the
 // diagram matches the physical cube the variant's scramble produces.
 function imageUrl(groupId, variant, swap) {
@@ -49,7 +92,7 @@ function imageUrl(groupId, variant, swap) {
       fd[sideIdx] = bad ? "d" : "b";
     }
   }
-  return `${VISUALCUBE}?fmt=svg&size=300&sch=ybosgm&bg=t&fd=${fd.join("")}`;
+  return `${VISUALCUBE}?fmt=svg&size=300&sch=${currentScheme}&bg=t&fd=${fd.join("")}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -88,6 +131,88 @@ imagesToggle.addEventListener("click", () => {
   const next = document.documentElement.dataset.images === "on" ? "off" : "on";
   localStorage.setItem("eolr-images", next);
   applyImages(next);
+});
+
+// ---------------------------------------------------------------------------
+// Cube colours (top/front picker → whole-site re-render)
+// ---------------------------------------------------------------------------
+const COLORS_KEY = "eolr-colors";
+const colorsToggle = document.getElementById("colors-toggle");
+const colorsPanel = document.getElementById("colors-panel");
+const colorUSelect = document.getElementById("color-u");
+const colorFSelect = document.getElementById("color-f");
+const colorsReset = document.getElementById("colors-reset");
+
+function loadColors() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(COLORS_KEY));
+    if (raw && COLORS[raw.u] && SIDE_CYCLE[raw.u].includes(raw.f)) return raw;
+  } catch {}
+  return { u: "Y", f: "O" }; // default = today's yellow-top / orange-front
+}
+
+let colors = loadColors();
+
+// Populate the two <select>s: Top lists all colours, Front lists only those
+// valid for the current Top. Rebuilt whenever Top changes.
+function fillColorSelects() {
+  colorUSelect.innerHTML = COLOR_ORDER.map(
+    (c) => `<option value="${c}"${c === colors.u ? " selected" : ""}>${COLOR_NAMES[c]}</option>`
+  ).join("");
+  const fronts = validFronts(colors.u);
+  if (!fronts.includes(colors.f)) colors.f = fronts[0];
+  colorFSelect.innerHTML = fronts
+    .map((c) => `<option value="${c}"${c === colors.f ? " selected" : ""}>${COLOR_NAMES[c]}</option>`)
+    .join("");
+}
+
+// Apply the chosen colours: rebuild the scheme and re-render every image.
+function applyColors(next, persist) {
+  colors = next;
+  currentScheme = deriveScheme(colors.u, colors.f);
+  if (persist) localStorage.setItem(COLORS_KEY, JSON.stringify(colors));
+  // tutorial: rebuild all cards (matches the boot sequence)
+  renderGroups();
+  updateCounts();
+  applyFilters();
+  // trainer: refresh the drill image if a case is currently showing
+  if (typeof refreshDrillImage === "function") refreshDrillImage();
+}
+
+// set the scheme for the first render (init block below calls renderGroups)
+currentScheme = deriveScheme(colors.u, colors.f);
+
+colorsToggle.addEventListener("click", (e) => {
+  e.stopPropagation();
+  const open = colorsPanel.hidden;
+  if (open) fillColorSelects();
+  colorsPanel.hidden = !open;
+  colorsToggle.setAttribute("aria-expanded", open ? "true" : "false");
+});
+
+// close the panel on an outside click
+document.addEventListener("click", (e) => {
+  if (!colorsPanel.hidden && !e.target.closest(".colors-menu")) {
+    colorsPanel.hidden = true;
+    colorsToggle.setAttribute("aria-expanded", "false");
+  }
+});
+
+colorUSelect.addEventListener("change", () => {
+  const u = colorUSelect.value;
+  const fronts = validFronts(u);
+  const f = fronts.includes(colors.f) ? colors.f : fronts[0];
+  applyColors({ u, f }, true);
+  fillColorSelects(); // Front options depend on Top
+});
+
+colorFSelect.addEventListener("change", () => {
+  applyColors({ u: colors.u, f: colorFSelect.value }, true);
+});
+
+colorsReset.addEventListener("click", () => {
+  applyColors({ u: "Y", f: "O" }, true);
+  fillColorSelects();
 });
 
 // ---------------------------------------------------------------------------

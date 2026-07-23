@@ -284,6 +284,14 @@ function updateIdleHint() {
     : "Select at least one case below";
 }
 
+// Re-point the drill image at the current variant with the current colours,
+// without advancing. Called by app.js applyColors when the scheme changes.
+function refreshDrillImage() {
+  if (!current) return;
+  const x = VARIANT_BY_KEY[current];
+  drillImage.src = imageUrl(x.c.group, x.c.variants[x.vi], colorSwapFor(x.c, x.vi));
+}
+
 function next() {
   const key = pickNext();
   if (!key) {

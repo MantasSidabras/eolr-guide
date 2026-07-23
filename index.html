@@ -39,6 +39,18 @@
       <label class="switch-label">Highlight
         <button id="marks-toggle" class="switch" role="switch" aria-label="Highlight moves from the description"></button>
       </label>
+      <div class="colors-menu">
+        <button id="colors-toggle" class="colors-toggle" aria-label="Change cube colors" aria-expanded="false" title="Change cube colors">🎨</button>
+        <div id="colors-panel" class="colors-panel" hidden>
+          <label class="colors-field">Top
+            <select id="color-u"></select>
+          </label>
+          <label class="colors-field">Front
+            <select id="color-f"></select>
+          </label>
+          <button id="colors-reset" class="toolbar-btn">Reset</button>
+        </div>
+      </div>
       <button id="theme-toggle" class="theme-toggle" aria-label="Toggle light/dark mode"></button>
     </div>
     <div class="header-row secondary">
